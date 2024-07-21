@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function RegisterPage() {
+  const symbols = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+  const [usernameError, setUsernameError] = useState(true);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -11,13 +13,13 @@ function RegisterPage() {
     bio: "",
     language: "en",
   });
-  const [errors, setErrors] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
-    bio: "",
-    language: "",
-  });
+  // const [errors, setErrors] = useState({
+  //   username: "",
+  //   password: "",
+  //   confirmPassword: "",
+  //   bio: "",
+  //   language: "",
+  // });
 
   const setField = (field:string, value:string) => {
     setFormData({
@@ -26,26 +28,29 @@ function RegisterPage() {
     })
   };
 
-  const findErrors = () => {
-    const {username, password, confirmPassword, bio, language} = formData;
-    const [newErrors, setNewErrors] = useState({});
-    if (!username || username === '') {
-      setNewErrors({
-        ...newErrors,
-        ['username']: 'Username can\'t be empty!'
-      })
-    }
+  // const findErrors = () => {
+  //   const {username, password, confirmPassword, bio, language} = formData;
+  //   const [newErrors, setNewErrors] = useState({});
+  //   if (!username || username === '') {
+  //     setNewErrors({
+  //       ...newErrors,
+  //       ['username']: 'Username can\'t be empty!'
+  //     })
+  //   }
 
-    return newErrors;
-  };
+  //   return newErrors;
+  // };
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
-    console.log(formData.username);
-    console.log(formData.password);
-    console.log(formData.confirmPassword);
-    console.log(formData.bio);
-    console.log(formData.language);
+
+    // checks if there is symbols in username
+    if (symbols.test(formData.username)){
+      setUsernameError(false);
+    }
+
+    // checks if password is 8-20 in length and if it contains a letter, number, and symbol
+    
   };
 
   return (
@@ -64,7 +69,7 @@ function RegisterPage() {
                     placeholder="Username" 
                     name="username"
                     onChange={e => setField('username', e.target.value)}
-                    isInvalid={!!errors.username}
+                    isInvalid={!usernameError}
                     required
                   />
                   <Form.Control.Feedback type="invalid">
