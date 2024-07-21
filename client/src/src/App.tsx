@@ -1,6 +1,7 @@
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import HomePage from './pages/HomePage';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import React, {Suspense} from 'react';
 import Spinner from 'react-bootstrap/Spinner';
@@ -18,6 +19,10 @@ function App() {
     {
       path: '/register',
       element: <RegisterPage></RegisterPage>
+    },
+    {
+      path: '/home',
+      element: <HomePage></HomePage>
     }
   ]);
 
