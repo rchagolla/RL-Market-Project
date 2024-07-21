@@ -1,11 +1,17 @@
 import { Form, Card, Button, FloatingLabel, FormSelect } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function RegisterPage() {
+  const navigate = useNavigate();
   const symbols = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-  const [usernameError, setUsernameError] = useState(true);
+  const numberRegex = /\d/;
+  const letterRegex = /[a-zA-Z]+/;
+  const spaceRegex = /\s/;
+  const [usernameError, setUsernameError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [confirmPassError, setConfirmPassError] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -13,13 +19,6 @@ function RegisterPage() {
     bio: "",
     language: "en",
   });
-  // const [errors, setErrors] = useState({
-  //   username: "",
-  //   password: "",
-  //   confirmPassword: "",
-  //   bio: "",
-  //   language: "",
-  // });
 
   const setField = (field:string, value:string) => {
     setFormData({
@@ -28,29 +27,38 @@ function RegisterPage() {
     })
   };
 
-  // const findErrors = () => {
-  //   const {username, password, confirmPassword, bio, language} = formData;
-  //   const [newErrors, setNewErrors] = useState({});
-  //   if (!username || username === '') {
-  //     setNewErrors({
-  //       ...newErrors,
-  //       ['username']: 'Username can\'t be empty!'
-  //     })
-  //   }
-
-  //   return newErrors;
-  // };
-
   const handleSubmit = async (e:any) => {
     e.preventDefault();
 
     // checks if there is symbols in username
-    if (symbols.test(formData.username)){
-      setUsernameError(false);
+    if (formData.username === '' || symbols.test(formData.username)){
+      setUsernameError(true);
+      return;
     }
 
-    // checks if password is 8-20 in length and if it contains a letter, number, and symbol
-    
+    // checks if password is 8-20 in length
+    setUsernameError(false);
+    if (formData.password === '' || formData.password.length < 8 || formData.password.length > 20) {
+      setPasswordError(true);
+      return;
+    }
+
+    // checks if password has a number, letter and symbol and any whitespace
+    if (!numberRegex.test(formData.password) || !letterRegex.test(formData.password) || !symbols.test(formData.password) || spaceRegex.test(formData.password)) {
+      setPasswordError(true);
+      return;
+    }
+
+    // check passwords match
+    setPasswordError(false);
+    if (formData.confirmPassword !== formData.password) {
+      setConfirmPassError(true);
+      return;
+    }
+
+    // TODO: send data to DB
+
+    navigate('/home');
   };
 
   return (
@@ -69,8 +77,7 @@ function RegisterPage() {
                     placeholder="Username" 
                     name="username"
                     onChange={e => setField('username', e.target.value)}
-                    isInvalid={!usernameError}
-                    required
+                    isInvalid={usernameError}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter a valid username (alphanumeric
@@ -87,7 +94,7 @@ function RegisterPage() {
                     placeholder="Password"
                     name="password"
                     onChange={e => setField('password', e.target.value)}
-                    required
+                    isInvalid={passwordError}
                   />
                   <Form.Control.Feedback type="invalid">
                     Your password must be 8-20 characters long, contain a letter, number, special character,
@@ -104,8 +111,11 @@ function RegisterPage() {
                   placeholder="Re-type Password"
                   name="passwordConfirm"
                   onChange={e => setField('confirmPassword', e.target.value)}
-                  required
+                  isInvalid = {confirmPassError}
                 />
+                <Form.Control.Feedback type="invalid">
+                  Passwords must match.
+                </Form.Control.Feedback>
                 </FloatingLabel>
               </Form.Group>
 
