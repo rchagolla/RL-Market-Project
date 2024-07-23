@@ -26,6 +26,9 @@ coverage
 # babel plugins
 .babelrc
 
+# client.js
+client.js
+
 # json packages
 package.json
 package-lock.json
