@@ -14,7 +14,7 @@ app.get('/api', (_req, res) => {
 
 app.get("*", (_req, res) => {
   const html = ReactDOMServer.renderToString(
-    <html lang="en">
+    <html lang="en" data-bs-theme="dark">
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
