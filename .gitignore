@@ -26,8 +26,8 @@ coverage
 # babel plugins
 .babelrc
 
-# client.js
-client.js
+# Public folder
+public/
 
 # json packages
 package.json
