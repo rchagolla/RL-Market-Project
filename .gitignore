@@ -26,8 +26,8 @@ coverage
 # babel plugins
 .babelrc
 
-# Public folder
-public/
+# client.js
+public/js/client.js
 
 # json packages
 package.json
@@ -144,6 +144,3 @@ bower_components
 psd
 thumb
 sketch
-
-# End of https://mrkandreev.name/snippets/gitignore-generator/#Node,react
-public/js/client.js
