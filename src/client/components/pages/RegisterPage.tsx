@@ -2,14 +2,16 @@ import { Form, Card, Button, FloatingLabel, FormSelect } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useRegister } from '../hooks/useRegister';
 
 function RegisterPage() {
   const navigate = useNavigate();
+  const {createNewUser} = useRegister();
   const symbols = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
   const numberRegex = /\d/;
   const letterRegex = /[a-zA-Z]+/;
   const spaceRegex = /\s/;
+  const [usernameTaken, setUsernameTaken] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPassError, setConfirmPassError] = useState(false);
@@ -57,15 +59,28 @@ function RegisterPage() {
       return;
     }
 
+    setConfirmPassError(false);
     // send data to server
-    try{
-      const response = await axios.post("http://localhost:5000/createUser", formData);
+    const success = await createNewUser(
+      formData.username,
+      formData.password,
+      formData.bio,
+      formData.language
+    );
 
-    } catch(err) {
-      console.log(err);
+    if (success) {
+      navigate('/home');
+    } else {
+      setUsernameTaken(true);
     }
 
-    navigate('/home');
+    // try{
+    //   const response = await axios.post("http://localhost:5000/createUser", formData);
+    //   console.log('sending data to server!');
+    // } catch(err) {
+    //   console.log(err);
+    //   return;
+    // }
   };
 
   return (
