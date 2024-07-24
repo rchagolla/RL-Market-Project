@@ -74,14 +74,6 @@ function RegisterPage() {
       setUsernameTaken(true);
       return;
     }
-
-    // try{
-    //   const response = await axios.post("http://localhost:5000/createUser", formData);
-    //   console.log('sending data to server!');
-    // } catch(err) {
-    //   console.log(err);
-    //   return;
-    // }
   };
 
   return (
