@@ -2,11 +2,66 @@ import express from "express";
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 import 'dotenv/config';
+import bcrypt from 'bcrypt';
+import { connect } from 'mongoose';
+import { User } from "./models/User";
 
 const app = express();
 const port = process.env.PORT || 3001;
+const MongoDBURI = process.env.DATABASE_URI || '';
+const saltRounds = 10;
 
 app.use(express.static("public"));
+app.use(express.json());
+
+// DB start function
+start().catch(err => console.log(err));
+
+// creating user
+app.post('/createUser', async (req, res) => {
+  const params = req.body;
+
+  // // check if username is taken
+  const findUser = await User.findOne({'username': params.username});
+
+  if (findUser?.$isEmpty) {
+    // someone is already using that username return false for hook.
+    console.log('username taken.');
+    res.json({success: false});
+    return;
+  }
+
+  // hash password
+  bcrypt.genSalt(saltRounds, async (err, salt) => {
+    if (err) {
+      console.log('couldn\'t generate salt.');
+      return;
+    }
+    // salt generation was successful, hash password now
+    bcrypt.hash(params.password, salt, async (err, hash) => {
+      if (err) {
+          console.log('could\'t hash password.');
+          return;
+      }
+  
+      // Hashing successful, 'hash' contains the hashed password
+      // create user
+      const newUser = new User({
+        username: params.username,
+        password: hash,
+        bio: params.bio,
+        language: params.language
+      });
+
+      // creating account and returning true for hook.
+      await newUser.save();
+      console.log('user created!');
+    });
+  });
+
+  res.json({success: true});
+});
+
 
 app.get('/api', (_req, res) => {
   res.status(200).json({ message: 'Hello from the server!' });
@@ -30,10 +85,17 @@ app.get("*", (_req, res) => {
   res.send(html);
 });
 
-// creating user
-app.post('/createUser', (_req, res) => {
-  
-});
+// starting up DB
+// TODO: MAKE DB CONNECT THEN START SERVER
+async function start() {
+  try{
+    await connect(MongoDBURI);
+  } catch(err) {
+    console.log('Couldn\'t connect to DB.');
+  }
+
+  console.log('Connected to DB!');
+}
 
 app.listen(port, () => {
   console.log(`Server listening at port ${port}`);
