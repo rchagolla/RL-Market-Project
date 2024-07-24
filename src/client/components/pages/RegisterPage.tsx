@@ -19,7 +19,7 @@ function RegisterPage() {
     username: "",
     password: "",
     confirmPassword: "",
-    bio: "",
+    bio: "I am a CS Slots User!",
     language: "en",
   });
 
@@ -72,6 +72,7 @@ function RegisterPage() {
       navigate('/home');
     } else {
       setUsernameTaken(true);
+      return;
     }
 
     // try{

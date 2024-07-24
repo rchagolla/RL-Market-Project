@@ -5,7 +5,6 @@ import 'dotenv/config';
 import bcrypt from 'bcrypt';
 import { connect } from 'mongoose';
 import { User } from "./models/User";
-import { Z_ASCII } from "zlib";
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -22,43 +21,44 @@ start().catch(err => console.log(err));
 app.post('/createUser', async (req, res) => {
   const params = req.body;
 
-  console.log(params);
-  // const newUser = new User({
-  //   username: params.username,
-  //   password: 'temp',
-  //   bio: params.bio,
-  //   language: params.language
-  // });
-
-  // // hash password
-  // bcrypt.genSalt(saltRounds, (err, salt) => {
-  //   if (err) {
-  //     console.log('couldn\'t generate salt.');
-  //     return;
-  //   }
-  //   // salt generation was successful, hash password now
-  //   bcrypt.hash(params.password, salt, (err, hash) => {
-  //     if (err) {
-  //         console.log('could\'t hash password.');
-  //         return;
-  //     }
-  
-  //     // Hashing successful, 'hash' contains the hashed password
-  //     newUser.password = hash
-  //   });   
-  // });
-
   // // check if username is taken
-  // const findUser = User.find({'username': newUser.username});
+  const findUser = await User.findOne({'username': params.username});
 
-  // if (findUser != null) {
-  //   // someone is already using that username
-  //   return false;
-  // }
+  if (findUser?.$isEmpty) {
+    // someone is already using that username return false for hook.
+    console.log('username taken.');
+    res.json({success: false});
+    return;
+  }
 
-  // // username is unique. creating account
-  // await newUser.save();
-  // console.log('user created!');
+  // hash password
+  bcrypt.genSalt(saltRounds, async (err, salt) => {
+    if (err) {
+      console.log('couldn\'t generate salt.');
+      return;
+    }
+    // salt generation was successful, hash password now
+    bcrypt.hash(params.password, salt, async (err, hash) => {
+      if (err) {
+          console.log('could\'t hash password.');
+          return;
+      }
+  
+      // Hashing successful, 'hash' contains the hashed password
+      // create user
+      const newUser = new User({
+        username: params.username,
+        password: hash,
+        bio: params.bio,
+        language: params.language
+      });
+
+      // creating account and returning true for hook.
+      await newUser.save();
+      console.log('user created!');
+    });
+  });
+
   res.json({success: true});
 });
 
@@ -86,6 +86,7 @@ app.get("*", (_req, res) => {
 });
 
 // starting up DB
+// TODO: MAKE DB CONNECT THEN START SERVER
 async function start() {
   try{
     await connect(MongoDBURI);
