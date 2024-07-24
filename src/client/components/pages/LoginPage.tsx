@@ -2,9 +2,11 @@ import { Form, Card, Button, FloatingLabel, FormSelect } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthentication } from '../hooks/useAuthentication';
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { loginUser } = useAuthentication();
   const [error, setError] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -22,8 +24,15 @@ function LoginPage() {
     e.preventDefault();
 
     // TODO: check user info with DB
+    const success = await loginUser(formData.username, formData.password);
 
-    navigate('/home');
+    // logged in
+    if (success) {
+      navigate('/home');
+    } else {
+      // username or password error
+      setError(true);
+    }
   };
 
   return (
@@ -42,7 +51,11 @@ function LoginPage() {
                     placeholder="Username" 
                     name="username"
                     onChange={e => setField('username', e.target.value)}
+                    isInvalid={error}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Password or Username Does not match.
+                  </Form.Control.Feedback>
                 </FloatingLabel>
               </Form.Group>
 
