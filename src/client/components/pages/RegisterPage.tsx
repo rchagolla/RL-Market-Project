@@ -2,6 +2,7 @@ import { Form, Card, Button, FloatingLabel, FormSelect } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -56,7 +57,13 @@ function RegisterPage() {
       return;
     }
 
-    // TODO: send data to DB
+    // send data to server
+    try{
+      const response = await axios.post("http://localhost:5000/createUser", formData);
+
+    } catch(err) {
+      console.log(err);
+    }
 
     navigate('/home');
   };
