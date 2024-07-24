@@ -29,10 +29,10 @@ function LoginPage() {
     // logged in
     if (success) {
       navigate('/home');
+    } else {
+      // username or password error
+      setError(true);
     }
-
-
-    // navigate('/home');
   };
 
   return (
@@ -51,7 +51,11 @@ function LoginPage() {
                     placeholder="Username" 
                     name="username"
                     onChange={e => setField('username', e.target.value)}
+                    isInvalid={error}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Password or Username Does not match.
+                  </Form.Control.Feedback>
                 </FloatingLabel>
               </Form.Group>
 

@@ -32,9 +32,24 @@ start().catch(err => console.log(err));
 app.post('/login', async (req, res) => {
   const params = req.body;
 
-  console.log(params);
-  res.json({success: true});
-  // const findUser = await User.findOne({'username' : params.username});
+  const findUser = await User.findOne({'username' : params.username});
+  // username is not in use
+  if (!findUser?.$isEmpty) {
+    res.json({success: false});
+    return;
+  }
+
+  // check passwords
+  bcrypt.compare(params.password, findUser.password, (err, result) => {
+    // passwords match
+    if (result) {
+      res.json({success: true});
+      return;
+    } else {
+      // passwords don't match
+      res.json({success: false});
+    }
+  });
 });
 
 // creating user
