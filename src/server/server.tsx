@@ -5,6 +5,14 @@ import 'dotenv/config';
 import bcrypt from 'bcrypt';
 import { connect } from 'mongoose';
 import { User } from "./models/User";
+import session from 'express-session';
+
+declare module 'express-session' {
+  interface SesData {
+    userId: number | null;
+    username: string | null;
+  }
+}
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -13,9 +21,21 @@ const saltRounds = 10;
 
 app.use(express.static("public"));
 app.use(express.json());
+app.use(
+  session({ secret: "sessionKey", saveUninitialized: false, resave: false })
+);
 
 // DB start function
 start().catch(err => console.log(err));
+
+// Login user
+app.post('/login', async (req, res) => {
+  const params = req.body;
+
+  console.log(params);
+  res.json({success: true});
+  // const findUser = await User.findOne({'username' : params.username});
+});
 
 // creating user
 app.post('/createUser', async (req, res) => {
