@@ -3,7 +3,6 @@ import { useSessionInfo } from "./useSessionInfo";
 
 type User = {
   username: string;
-  password: string;
   bio: string;
   language: string;
 };
