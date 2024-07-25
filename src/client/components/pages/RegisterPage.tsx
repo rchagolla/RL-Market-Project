@@ -1,4 +1,4 @@
-import { Form, Card, Button, FloatingLabel, FormSelect } from 'react-bootstrap';
+import { Form, Card, Button, FloatingLabel, FormSelect, Alert } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -82,6 +82,9 @@ function RegisterPage() {
         <Card.Header>Sign Up</Card.Header>
 
         <Card.Body>
+          {usernameTaken && (<Alert variant='danger' dismissible>Username Already Taken.</Alert>)
+          }
+
           <FormContent>
             <Form onSubmit={handleSubmit}>
               {/* Username Input */}
