@@ -27,7 +27,7 @@ function LoginPage() {
 
     // logged in
     if (success) {
-      navigate('/home');
+      navigate('/');
     } else {
       // username or password error
       setError(true);

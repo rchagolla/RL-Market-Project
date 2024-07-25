@@ -3,10 +3,12 @@ import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import { useNavigate } from 'react-router-dom';
+import { useCurrentUser } from '../hooks/useCurrentUser';
 
 
 function LandingPage() {
   const navigate = useNavigate();
+  const user = useCurrentUser();
 
   return (
     <Container>

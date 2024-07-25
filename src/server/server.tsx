@@ -110,12 +110,9 @@ class APIService {
     return true;
   }
 
-  getSessionInfo() {
-    const sessionInfo = {
-      userId: this.session.userId,
-    };
-
-    return sessionInfo;
+  async getCurrentUser() {
+    const id = this.session.userId;
+    return id ? await this.getUser(id) : null;
   }
 
   async getUser(id: number) {

@@ -2,11 +2,10 @@ import { Form, Card, Button, FloatingLabel, FormSelect, Alert } from 'react-boot
 import styled from 'styled-components';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRegister } from '../hooks/useRegister';
+import { api } from '../../api';
 
 function RegisterPage() {
   const navigate = useNavigate();
-  const {createNewUser} = useRegister();
   const symbols = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
   const numberRegex = /\d/;
   const letterRegex = /[a-zA-Z]+/;
@@ -61,7 +60,7 @@ function RegisterPage() {
 
     setConfirmPassError(false);
     // send data to server
-    const success = await createNewUser(
+    const success = await api.createUser(
       formData.username,
       formData.password,
       formData.bio,
