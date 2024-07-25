@@ -69,7 +69,7 @@ function RegisterPage() {
     );
 
     if (success) {
-      navigate('/home');
+      navigate('/');
     } else {
       setUsernameTaken(true);
       return;
