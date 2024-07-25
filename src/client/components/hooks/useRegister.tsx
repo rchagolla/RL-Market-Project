@@ -1,5 +1,4 @@
-// import api from '../client';
-import axios from "axios";
+import { api } from '../../client';
 
 // Provides login/logout functions that automatically update state
 export function useRegister() {
@@ -9,17 +8,7 @@ export function useRegister() {
     bio: string,
     language: string,
   ): Promise<boolean> => {
-    try {
-      const res = await axios.post("/createUser", { username, password, bio, language});
-
-      if (res.data.success) {
-        return true;
-      }
-
-    } catch (err) {
-      console.log(err);
-    }
-    return false;
+    return await api.createUser(username, password, bio, language);
   };
 
   return { createNewUser };
