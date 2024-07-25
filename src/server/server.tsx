@@ -50,7 +50,6 @@ class APIService {
     const user = await User.findOne({'username' : username});
     // username is not in use
     if (!user?.$isEmpty) {
-      console.log('invalid username!');
       return false;
     }
 
@@ -77,7 +76,6 @@ class APIService {
 
     if (findUser?.$isEmpty) {
       // someone is already using that username return false for hook.
-      console.log('username taken.');
       return false;
     }
 
