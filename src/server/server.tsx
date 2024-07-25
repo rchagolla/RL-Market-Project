@@ -47,22 +47,27 @@ class APIService {
 
   // Login user
   async authLogin(username:string, password:string) {
-    const findUser = await User.findOne({'username' : username});
+    const user = await User.findOne({'username' : username});
     // username is not in use
-    if (!findUser?.$isEmpty) {
+    if (!user?.$isEmpty) {
+      console.log('invalid username!');
       return false;
     }
 
     // check passwords
-    bcrypt.compare(password, findUser.password, (err, result) => {
-      // passwords match
-      if (result) {
-        return true;
-      }
-    });
+    const isValidPassword = bcrypt.compareSync(password, user.password);
+    if (isValidPassword) {
+      this.session.userId = user.id;
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-    //passwords don't match
-    return false;
+  // Logout
+  async authLogout(){
+    this.session.userId = null;
+    return true;
   }
 
   // creating user
@@ -105,6 +110,20 @@ class APIService {
     });
 
     return true;
+  }
+
+  getSessionInfo() {
+    const sessionInfo = {
+      userId: this.session.userId,
+    };
+
+    return sessionInfo;
+  }
+
+  async getUser(id: number) {
+    const user = await User.findById(id);
+
+    return user;
   }
 }
 

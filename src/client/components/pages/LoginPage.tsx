@@ -25,6 +25,7 @@ function LoginPage() {
 
     // TODO: check user info with DB
     const success = await loginUser(formData.username, formData.password);
+    console.log(success);
 
     // logged in
     if (success) {

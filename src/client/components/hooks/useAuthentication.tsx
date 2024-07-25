@@ -1,18 +1,18 @@
-import axios from "axios";
-// import { useSessionInfo } from "./useSessionInfo";
+import { useQueryClient } from "@tanstack/react-query";
+import { api } from "../../client";
 
 // Provides login/logout functions that automatically update state
 export function useAuthentication() {
-  // const [, refetchSessionInfo] = useSessionInfo();
+  const queryClient = useQueryClient();
 
   const loginUser = async (
     username: string,
     password: string
   ): Promise<boolean> => {
-    const res = await axios.post("/login", { username, password });
+    const success = await api.authLogin(username, password);
 
-    if (res.data.success) {
-      // refetchSessionInfo();
+    if (success) {
+      await queryClient.invalidateQueries({ queryKey: ["getSessionInfo"] });
       return true;
     }
 
@@ -20,10 +20,10 @@ export function useAuthentication() {
   };
 
   const logoutUser = async (): Promise<boolean> => {
-    const res = await axios.post("/api/logout");
-    // refetchSessionInfo();
+    const success = await api.authLogout();
+    await queryClient.invalidateQueries({ queryKey: ["getSessionInfo"] });
 
-    return res.data.success;
+    return success;
   };
 
   return { loginUser, logoutUser };
