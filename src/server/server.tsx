@@ -5,14 +5,8 @@ import 'dotenv/config';
 import bcrypt from 'bcrypt';
 import { connect } from 'mongoose';
 import { User } from "./models/User";
-import session from 'express-session';
-
-declare module 'express-session' {
-  interface SesData {
-    userId: number | null;
-    username: string | null;
-  }
-}
+import session, { SessionData} from 'express-session';
+import { rpcHandler } from 'typed-rpc/express';
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -28,79 +22,7 @@ app.use(
 // DB start function
 start().catch(err => console.log(err));
 
-// Login user
-app.post('/login', async (req, res) => {
-  const params = req.body;
-
-  const findUser = await User.findOne({'username' : params.username});
-  // username is not in use
-  if (!findUser?.$isEmpty) {
-    res.json({success: false});
-    return;
-  }
-
-  // check passwords
-  bcrypt.compare(params.password, findUser.password, (err, result) => {
-    // passwords match
-    if (result) {
-      res.json({success: true});
-      return;
-    } else {
-      // passwords don't match
-      res.json({success: false});
-    }
-  });
-});
-
-// creating user
-app.post('/createUser', async (req, res) => {
-  const params = req.body;
-
-  // // check if username is taken
-  const findUser = await User.findOne({'username': params.username});
-
-  if (findUser?.$isEmpty) {
-    // someone is already using that username return false for hook.
-    console.log('username taken.');
-    res.json({success: false});
-    return;
-  }
-
-  // hash password
-  bcrypt.genSalt(saltRounds, async (err, salt) => {
-    if (err) {
-      console.log('couldn\'t generate salt.');
-      return;
-    }
-    // salt generation was successful, hash password now
-    bcrypt.hash(params.password, salt, async (err, hash) => {
-      if (err) {
-          console.log('could\'t hash password.');
-          return;
-      }
-  
-      // Hashing successful, 'hash' contains the hashed password
-      // create user
-      const newUser = new User({
-        username: params.username,
-        password: hash,
-        bio: params.bio,
-        language: params.language
-      });
-
-      // creating account and returning true for hook.
-      await newUser.save();
-      console.log('user created!');
-    });
-  });
-
-  res.json({success: true});
-});
-
-
-app.get('/api', (_req, res) => {
-  res.status(200).json({ message: 'Hello from the server!' });
-});
+app.post('/rpc', rpcHandler((req) => new APIService(req.session as SessionData)));
 
 app.get("*", (_req, res) => {
   const html = ReactDOMServer.renderToString(
@@ -120,6 +42,89 @@ app.get("*", (_req, res) => {
   res.send(html);
 });
 
+class APIService {
+  constructor(private session:SessionData){}
+
+  // Login user
+  async authLogin(username:string, password:string) {
+    const user = await User.findOne({'username' : username});
+    // username is not in use
+    if (!user?.$isEmpty) {
+      return false;
+    }
+
+    // check passwords
+    const isValidPassword = bcrypt.compareSync(password, user.password);
+    if (isValidPassword) {
+      this.session.userId = user.id;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // Logout
+  async authLogout(){
+    this.session.userId = null;
+    return true;
+  }
+
+  // creating user
+  async createUser(username: string, password: string, bio: string, language: string) {
+    // // check if username is taken
+    const findUser = await User.findOne({'username': username});
+
+    if (findUser?.$isEmpty) {
+      // someone is already using that username return false for hook.
+      return false;
+    }
+
+    // hash password
+    bcrypt.genSalt(saltRounds, async (err, salt) => {
+      if (err) {
+        console.log('couldn\'t generate salt.');
+        return false;
+      }
+      // salt generation was successful, hash password now
+      bcrypt.hash(password, salt, async (err, hash) => {
+        if (err) {
+            console.log('could\'t hash password.');
+            return false;
+        }
+    
+        // Hashing successful, 'hash' contains the hashed password
+        // create user
+        const newUser = new User({
+          username: username,
+          password: hash,
+          bio: bio,
+          language: language
+        });
+
+        // creating account and returning true for hook.
+        await newUser.save();
+        console.log('user created!');
+      });
+    });
+
+    return true;
+  }
+
+  getSessionInfo() {
+    const sessionInfo = {
+      userId: this.session.userId,
+    };
+
+    return sessionInfo;
+  }
+
+  async getUser(id: number) {
+    const user = await User.findById(id);
+
+    return user;
+  }
+}
+
 // starting up DB
 // TODO: MAKE DB CONNECT THEN START SERVER
 async function start() {
@@ -135,3 +140,12 @@ async function start() {
 app.listen(port, () => {
   console.log(`Server listening at port ${port}`);
 });
+
+
+declare module 'express-session' {
+  interface SessionData {
+    userId: number | null;
+  }
+}
+
+export type { APIService };

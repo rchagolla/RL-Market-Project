@@ -23,7 +23,6 @@ function LoginPage() {
   const handleSubmit = async (e:any) => {
     e.preventDefault();
 
-    // TODO: check user info with DB
     const success = await loginUser(formData.username, formData.password);
 
     // logged in
