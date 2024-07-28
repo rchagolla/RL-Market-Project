@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { products } from '@rocketleagueapi/items';
-import { Card, ListGroup, Container } from 'react-bootstrap';
+import { Card, Row, Container } from 'react-bootstrap';
 
 interface Product {
   name: string;
@@ -24,22 +24,17 @@ function HomePage() {
   const prods: ProductCollection = products as ProductCollection;
 
   return (
-    <Container className='p-3'>
-      {Object.entries(prods).map(([key, value]) => (
-        <Card style={{ width: '18rem' }} key={key}>
-          <Card.Img variant="top" src="img/comingSoon.jpeg" />
-          <Card.Body>
-            <Card.Title>{value.name}</Card.Title>
-          </Card.Body>
-        </Card>
-      ))}
-
-      {/* <Card style={{ width: '18rem' }}>
-        <Card.Img variant="top" src="./public/img/comingSoon.jpeg" />
-        <Card.Body>
-          <Card.Title>pending</Card.Title>
-        </Card.Body>
-      </Card> */}
+    <Container  fluid className='p-3'>
+      <Row className='justify-content-center'>
+        {Object.entries(prods).map(([key, value]) => (
+          <Card className='m-2' style={{ width: '13%' }} key={key}>
+            <Card.Img variant="top" src="img/comingSoon.jpeg" />
+            <Card.Body>
+              <Card.Title>{value.name}</Card.Title>
+            </Card.Body>
+          </Card>
+        ))}
+      </Row>
     </Container>
   )
 }
