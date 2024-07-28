@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from './pages/RegisterPage';
-import HomePage from "./pages/HomePage";
+import HomePage from './pages/HomePage';
 import { useCurrentUser } from "./hooks/useCurrentUser";
 
 const queryClient = new QueryClient();
