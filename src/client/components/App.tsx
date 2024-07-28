@@ -10,6 +10,7 @@ import { useCurrentUser } from "./hooks/useCurrentUser";
 
 const queryClient = new QueryClient();
 
+// TODO: stop showing landing page when logging in.
 export function App() {
   const router = createBrowserRouter([
     {

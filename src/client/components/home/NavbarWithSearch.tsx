@@ -15,11 +15,13 @@ export function NavbarWithSearch() {
     if (success) {
       navigate('/');
     } else {
+      // TODO: change to alert
       console.log('error logging out!');
     }
   };
   
   return (
+    // TODO: Finish navbar
     <NavbarContainer>
       <Navbar>
         <Container fluid className='justify-content-left'>
