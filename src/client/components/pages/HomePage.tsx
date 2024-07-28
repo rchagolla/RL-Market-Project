@@ -27,7 +27,7 @@ function HomePage() {
     <Container className='p-3'>
       {Object.entries(prods).map(([key, value]) => (
         <Card style={{ width: '18rem' }} key={key}>
-          <Card.Img variant="top" src="public/img/comingSoon.jpeg" />
+          <Card.Img variant="top" src="img/comingSoon.jpeg" />
           <Card.Body>
             <Card.Title>{value.name}</Card.Title>
           </Card.Body>
