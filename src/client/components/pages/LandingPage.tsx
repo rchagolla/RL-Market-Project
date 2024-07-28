@@ -12,7 +12,7 @@ function LandingPage() {
 
   return (
     <Container>
-      <h1 className='display-1 text-center'> Welcome To CS Slots! </h1>
+      <h1 className='display-1 text-center'> Welcome To RL Market! </h1>
       <br></br>
       <br></br>
 
