@@ -30,7 +30,8 @@ app.get("*", (_req, res) => {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>CS Slots</title>
+        <title>RL Market</title>
+        <link rel="icon" href="/img/rlmarket(2).png"></link>
       </head>
       <body>
         <div id="root"></div>
