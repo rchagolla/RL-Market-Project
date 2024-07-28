@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { products } from '@rocketleagueapi/items';
 import { Card, Row, Container, Pagination } from 'react-bootstrap';
+import { NavbarWithSearch } from '../home/NavbarWithSearch';
 
 // 6314 items from products
 // 49 items per page
@@ -75,6 +76,7 @@ function HomePage() {
 
   return (
     <Container  fluid className='p-3'>
+      <NavbarWithSearch />
       <Row className='justify-content-center mb-3'>
         {slicedProducts.map(([key, value]) => (
           <Card className='m-2' style={{ width: '13%' }} key={key}>
@@ -96,4 +98,4 @@ function HomePage() {
   )
 }
 
-export default HomePage
+export default HomePage;
