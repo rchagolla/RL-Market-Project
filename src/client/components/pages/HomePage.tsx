@@ -36,7 +36,8 @@ function HomePage() {
 
   // used for pagination format
   const [pagesArr, setPagesArr] = useState(Array.from({length: 10}, (_, i) => i + 1));
-  // const [currPaginationStart, setCurrPaginationStart] = useState(1);
+  const [isFirstDisabled, setIsFirstDisabled] = useState(true);
+  const [isLasttDisabled, setIsLastDisabled] = useState(false);
 
   // change items on page
   function changePage(page:number) {
@@ -48,17 +49,15 @@ function HomePage() {
   // change pagination numbers
   function updatePagination(offset:number) {
     // edge case errors
-    if (pagesArr[9] === 10 && offset === -1) {
-      return;
-    }
-
-    if (pagesArr[8] === 129 && offset === 1) {
+    if (pagesArr[0] === 1 && offset === -1) {
+      setIsFirstDisabled(true);
       return;
     }
 
     // handling last section of pagination of 9
     if (pagesArr[9] === 120 && offset === 1) {
       setPagesArr(Array.from({length: 9}, (_, i) => 121 + i));
+      setIsLastDisabled(true);
       return;
     }
 
@@ -66,36 +65,12 @@ function HomePage() {
     if (offset === 1) {
       const newStart = pagesArr[9] + 1;
       setPagesArr(Array.from({length: 10}, (_, i) => newStart + i));
+      setIsFirstDisabled(false);
     } else if (offset === -1) {
       const newStart = pagesArr[0] - 10;
       setPagesArr(Array.from({length: 10}, (_, i) => newStart + i));
+      setIsLastDisabled(false);
     }
-
-
-    // if (currPaginationStart === 1 && offset === -1) {
-    //   return;
-    // }
-
-    // if (currPaginationStart === 121 && offset === 1) {
-    //   return;
-    // }
-
-    // // update pagination start
-    // if (offset === 1) {
-    //   const newStart = currPaginationStart + 10;
-    //   setCurrPaginationStart(currPaginationStart + 10);
-
-    //   // update pagination values
-    //   const newArr = Array.from({length: 10}, (_, i) => newStart + i);
-    //   setPagesArr(newArr);
-    // } else if (offset === -1) {
-    //   const newStart = currPaginationStart - 10;
-    //   setCurrPaginationStart(currPaginationStart - 10);
-
-    //   // update pagination values
-    //   const newArr = Array.from({length: 10}, (_, i) => currPaginationStart + i);
-    //   setPagesArr(newArr);
-    // }
   }
 
   return (
@@ -112,11 +87,11 @@ function HomePage() {
         ))}
       </Row>
       <Pagination className='justify-content-center'>
-        <Pagination.First onClick={() => updatePagination(-1)}></Pagination.First>
+        <Pagination.First disabled={isFirstDisabled} onClick={() => updatePagination(-1)}></Pagination.First>
         {pagesArr.map((i) => (
           <Pagination.Item onClick={() => changePage(i)} key={i}>{i}</Pagination.Item>
         ))}
-        <Pagination.Last onClick={() => updatePagination(1)}></Pagination.Last>
+        <Pagination.Last disabled={isLasttDisabled} onClick={() => updatePagination(1)}></Pagination.Last>
       </Pagination>
     </Container>
   )
