@@ -36,65 +36,117 @@ function HomePage() {
 
   // used for pagination format
   const [pagesArr, setPagesArr] = useState(Array.from({length: 10}, (_, i) => i + 1));
-  const [currPaginationStart, setCurrPaginationStart] = useState(1);
+  const [isFirstDisabled, setIsFirstDisabled] = useState(true);
+  const [isLastDisabled, setIsLastDisabled] = useState(false);
+  const [currPage, setCurrPage] = useState(1);
 
   // change items on page
-  // TODO: FIX EDGE CASE ERRORS
   function changePage(page:number) {
+    setCurrPage(page);
     const newEnd = page * itemsPerPage;
     const newStart = newEnd - itemsPerPage;
     setSlicedProducts(productsArr.slice(newStart, newEnd));
   }
 
+  // decrement page
+  function prevPage() {
+    if (currPage === 1) {
+      return;
+    }
+
+    const newPage = currPage - 1;
+    const newEnd = newPage * itemsPerPage;
+    const newStart = newEnd - itemsPerPage;
+    setSlicedProducts(productsArr.slice(newStart, newEnd));
+    setCurrPage(newPage);
+  }
+
+  // increment page
+  function nextPage() {
+    if (currPage === 129) {
+      return;
+    }
+
+    const newPage = currPage + 1;
+    const newEnd = newPage * itemsPerPage;
+    const newStart = newEnd - itemsPerPage;
+    setSlicedProducts(productsArr.slice(newStart, newEnd));
+    setCurrPage(newPage);
+  }
+
   // change pagination numbers
   function updatePagination(offset:number) {
-    if (currPaginationStart === 1 && offset === -1) {
+    // edge case errors
+    if (pagesArr[0] === 1 && offset === -1) {
+      setIsFirstDisabled(true);
       return;
     }
 
-    if (currPaginationStart === 121 && offset === 1) {
+    // handling last section of pagination of 9
+    if (pagesArr[9] === 120 && offset === 1) {
+      setPagesArr(Array.from({length: 9}, (_, i) => 121 + i));
+      setIsLastDisabled(true);
       return;
     }
 
-    // update pagination start
+    // update pagination section
     if (offset === 1) {
-      const newStart = currPaginationStart + 10;
-      setCurrPaginationStart(currPaginationStart + 10);
-
-      // update pagination values
-      const newArr = Array.from({length: 10}, (_, i) => newStart + i);
-      setPagesArr(newArr);
+      const newStart = pagesArr[9] + 1;
+      setPagesArr(Array.from({length: 10}, (_, i) => newStart + i));
+      setIsFirstDisabled(false);
     } else if (offset === -1) {
-      const newStart = currPaginationStart - 10;
-      setCurrPaginationStart(currPaginationStart - 10);
-
-      // update pagination values
-      const newArr = Array.from({length: 10}, (_, i) => currPaginationStart + i);
-      setPagesArr(newArr);
+      const newStart = pagesArr[0] - 10;
+      setPagesArr(Array.from({length: 10}, (_, i) => newStart + i));
+      setIsLastDisabled(false);
     }
   }
 
   return (
-    <Container  fluid className='p-3'>
+    <>
       <NavbarWithSearch />
-      <Row className='justify-content-center mb-3'>
-        {slicedProducts.map(([key, value]) => (
-          <Card className='m-2' style={{ width: '13%' }} key={key}>
-            <Card.Img variant="top" src="img/comingSoon.jpeg" />
-            <Card.Body>
-              <Card.Title>{value.name}</Card.Title>
-            </Card.Body>
-          </Card>
-        ))}
-      </Row>
-      <Pagination className='justify-content-center'>
-        <Pagination.First onClick={() => updatePagination(-1)}></Pagination.First>
-        {pagesArr.map((i) => (
-          <Pagination.Item onClick={() => changePage(i)} key={i}>{i}</Pagination.Item>
-        ))}
-        <Pagination.Last onClick={() => updatePagination(1)}></Pagination.Last>
-      </Pagination>
-    </Container>
+      
+      <Container  fluid className='p-3'>
+
+        <Pagination className='justify-content-center mt-5'>
+          <Pagination.First disabled={isFirstDisabled} onClick={() => updatePagination(-1)}></Pagination.First>
+          <Pagination.Prev onClick={prevPage}></Pagination.Prev>
+          {pagesArr.map((i) => (
+            <Pagination.Item onClick={() => changePage(i)} key={i}>{i}</Pagination.Item>
+          ))}
+          <Pagination.Next onClick={nextPage}></Pagination.Next>
+          <Pagination.Last disabled={isLastDisabled} onClick={() => updatePagination(1)}></Pagination.Last>
+        </Pagination>
+
+        <Row className='justify-content-center mb-3'>
+          page {currPage} of 129
+        </Row>
+
+        <Row className='justify-content-center mb-3'>
+          {slicedProducts.map(([key, value]) => (
+            <Card className='m-2' style={{ width: '13%' }} key={key}>
+              <Card.Img variant="top" src="img/comingSoon.jpeg" />
+              <Card.Body>
+                <Card.Title>{value.name}</Card.Title>
+              </Card.Body>
+            </Card>
+          ))}
+        </Row>
+
+        <Row className='justify-content-center mb-3'>
+          page {currPage} of 129
+        </Row>
+
+        <Pagination className='justify-content-center'>
+          <Pagination.First disabled={isFirstDisabled} onClick={() => updatePagination(-1)}></Pagination.First>
+          <Pagination.Prev onClick={prevPage}></Pagination.Prev>
+          {pagesArr.map((i) => (
+            <Pagination.Item onClick={() => changePage(i)} key={i}>{i}</Pagination.Item>
+          ))}
+          <Pagination.Next onClick={nextPage}></Pagination.Next>
+          <Pagination.Last disabled={isLastDisabled} onClick={() => updatePagination(1)}></Pagination.Last>
+        </Pagination>
+      </Container>
+    </>
   )
 }
 

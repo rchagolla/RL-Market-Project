@@ -43,5 +43,5 @@ export function NavbarWithSearch() {
 }
 
 const NavbarContainer = styled('div')`
-  
+  background-color: #16191c;
 `;
