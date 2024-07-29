@@ -75,6 +75,7 @@ function RegisterPage() {
     }
   };
 
+  // TODO: add ids to inputs to stop warnings
   return (
     <Container>
       <Card id='registercard' className='text-center'>
