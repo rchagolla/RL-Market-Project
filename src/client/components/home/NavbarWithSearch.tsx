@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { useAuthentication } from '../hooks/useAuthentication';
 import { useNavigate } from 'react-router-dom';
+import { FaUser } from 'react-icons/fa';
 
 export function NavbarWithSearch() {
   const user = useCurrentUser();
@@ -35,7 +36,9 @@ export function NavbarWithSearch() {
             />
           </Navbar.Brand>
           <h1>Welcome {user?.username}!</h1>
-          <Button onClick={logout}>Logout</Button>
+          <Button className='rounded-circle' size='lg' variant='dark' onClick={logout}>
+            <FaUser />
+          </Button>
         </Container>
       </Navbar>
     </NavbarContainer>
