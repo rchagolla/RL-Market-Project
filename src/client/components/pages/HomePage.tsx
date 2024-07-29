@@ -37,13 +37,41 @@ function HomePage() {
   // used for pagination format
   const [pagesArr, setPagesArr] = useState(Array.from({length: 10}, (_, i) => i + 1));
   const [isFirstDisabled, setIsFirstDisabled] = useState(true);
-  const [isLasttDisabled, setIsLastDisabled] = useState(false);
+  const [isLastDisabled, setIsLastDisabled] = useState(false);
+  const [currPage, setCurrPage] = useState(1);
 
   // change items on page
   function changePage(page:number) {
+    setCurrPage(page);
     const newEnd = page * itemsPerPage;
     const newStart = newEnd - itemsPerPage;
     setSlicedProducts(productsArr.slice(newStart, newEnd));
+  }
+
+  // decrement page
+  function prevPage() {
+    if (currPage === 1) {
+      return;
+    }
+
+    const newPage = currPage - 1;
+    const newEnd = newPage * itemsPerPage;
+    const newStart = newEnd - itemsPerPage;
+    setSlicedProducts(productsArr.slice(newStart, newEnd));
+    setCurrPage(newPage);
+  }
+
+  // increment page
+  function nextPage() {
+    if (currPage === 129) {
+      return;
+    }
+
+    const newPage = currPage + 1;
+    const newEnd = newPage * itemsPerPage;
+    const newStart = newEnd - itemsPerPage;
+    setSlicedProducts(productsArr.slice(newStart, newEnd));
+    setCurrPage(newPage);
   }
 
   // change pagination numbers
@@ -76,6 +104,21 @@ function HomePage() {
   return (
     <Container  fluid className='p-3'>
       <NavbarWithSearch />
+
+      <Pagination className='justify-content-center mt-5'>
+        <Pagination.First disabled={isFirstDisabled} onClick={() => updatePagination(-1)}></Pagination.First>
+        <Pagination.Prev onClick={prevPage}></Pagination.Prev>
+        {pagesArr.map((i) => (
+          <Pagination.Item onClick={() => changePage(i)} key={i}>{i}</Pagination.Item>
+        ))}
+        <Pagination.Next onClick={nextPage}></Pagination.Next>
+        <Pagination.Last disabled={isLastDisabled} onClick={() => updatePagination(1)}></Pagination.Last>
+      </Pagination>
+
+      <Row className='justify-content-center mb-3'>
+        page {currPage} of 129
+      </Row>
+
       <Row className='justify-content-center mb-3'>
         {slicedProducts.map(([key, value]) => (
           <Card className='m-2' style={{ width: '13%' }} key={key}>
@@ -86,12 +129,19 @@ function HomePage() {
           </Card>
         ))}
       </Row>
+
+      <Row className='justify-content-center mb-3'>
+        page {currPage} of 129
+      </Row>
+
       <Pagination className='justify-content-center'>
         <Pagination.First disabled={isFirstDisabled} onClick={() => updatePagination(-1)}></Pagination.First>
+        <Pagination.Prev onClick={prevPage}></Pagination.Prev>
         {pagesArr.map((i) => (
           <Pagination.Item onClick={() => changePage(i)} key={i}>{i}</Pagination.Item>
         ))}
-        <Pagination.Last disabled={isLasttDisabled} onClick={() => updatePagination(1)}></Pagination.Last>
+        <Pagination.Next onClick={nextPage}></Pagination.Next>
+        <Pagination.Last disabled={isLastDisabled} onClick={() => updatePagination(1)}></Pagination.Last>
       </Pagination>
     </Container>
   )
