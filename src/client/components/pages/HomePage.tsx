@@ -102,48 +102,51 @@ function HomePage() {
   }
 
   return (
-    <Container  fluid className='p-3'>
+    <>
       <NavbarWithSearch />
+      
+      <Container  fluid className='p-3'>
 
-      <Pagination className='justify-content-center mt-5'>
-        <Pagination.First disabled={isFirstDisabled} onClick={() => updatePagination(-1)}></Pagination.First>
-        <Pagination.Prev onClick={prevPage}></Pagination.Prev>
-        {pagesArr.map((i) => (
-          <Pagination.Item onClick={() => changePage(i)} key={i}>{i}</Pagination.Item>
-        ))}
-        <Pagination.Next onClick={nextPage}></Pagination.Next>
-        <Pagination.Last disabled={isLastDisabled} onClick={() => updatePagination(1)}></Pagination.Last>
-      </Pagination>
+        <Pagination className='justify-content-center mt-5'>
+          <Pagination.First disabled={isFirstDisabled} onClick={() => updatePagination(-1)}></Pagination.First>
+          <Pagination.Prev onClick={prevPage}></Pagination.Prev>
+          {pagesArr.map((i) => (
+            <Pagination.Item onClick={() => changePage(i)} key={i}>{i}</Pagination.Item>
+          ))}
+          <Pagination.Next onClick={nextPage}></Pagination.Next>
+          <Pagination.Last disabled={isLastDisabled} onClick={() => updatePagination(1)}></Pagination.Last>
+        </Pagination>
 
-      <Row className='justify-content-center mb-3'>
-        page {currPage} of 129
-      </Row>
+        <Row className='justify-content-center mb-3'>
+          page {currPage} of 129
+        </Row>
 
-      <Row className='justify-content-center mb-3'>
-        {slicedProducts.map(([key, value]) => (
-          <Card className='m-2' style={{ width: '13%' }} key={key}>
-            <Card.Img variant="top" src="img/comingSoon.jpeg" />
-            <Card.Body>
-              <Card.Title>{value.name}</Card.Title>
-            </Card.Body>
-          </Card>
-        ))}
-      </Row>
+        <Row className='justify-content-center mb-3'>
+          {slicedProducts.map(([key, value]) => (
+            <Card className='m-2' style={{ width: '13%' }} key={key}>
+              <Card.Img variant="top" src="img/comingSoon.jpeg" />
+              <Card.Body>
+                <Card.Title>{value.name}</Card.Title>
+              </Card.Body>
+            </Card>
+          ))}
+        </Row>
 
-      <Row className='justify-content-center mb-3'>
-        page {currPage} of 129
-      </Row>
+        <Row className='justify-content-center mb-3'>
+          page {currPage} of 129
+        </Row>
 
-      <Pagination className='justify-content-center'>
-        <Pagination.First disabled={isFirstDisabled} onClick={() => updatePagination(-1)}></Pagination.First>
-        <Pagination.Prev onClick={prevPage}></Pagination.Prev>
-        {pagesArr.map((i) => (
-          <Pagination.Item onClick={() => changePage(i)} key={i}>{i}</Pagination.Item>
-        ))}
-        <Pagination.Next onClick={nextPage}></Pagination.Next>
-        <Pagination.Last disabled={isLastDisabled} onClick={() => updatePagination(1)}></Pagination.Last>
-      </Pagination>
-    </Container>
+        <Pagination className='justify-content-center'>
+          <Pagination.First disabled={isFirstDisabled} onClick={() => updatePagination(-1)}></Pagination.First>
+          <Pagination.Prev onClick={prevPage}></Pagination.Prev>
+          {pagesArr.map((i) => (
+            <Pagination.Item onClick={() => changePage(i)} key={i}>{i}</Pagination.Item>
+          ))}
+          <Pagination.Next onClick={nextPage}></Pagination.Next>
+          <Pagination.Last disabled={isLastDisabled} onClick={() => updatePagination(1)}></Pagination.Last>
+        </Pagination>
+      </Container>
+    </>
   )
 }
 
