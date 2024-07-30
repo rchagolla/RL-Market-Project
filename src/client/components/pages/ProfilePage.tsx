@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { useAuthentication } from '../hooks/useAuthentication';
 import AccountDetails from '../profilePage/AccountDetails';
+import { NavbarWithSearch } from '../home/NavbarWithSearch';
 
 function ProfilePage() {
   const user = useCurrentUser();
@@ -21,31 +22,34 @@ function ProfilePage() {
   }
 
   return (
-    <Container fluid className='p-4 text-center'>
-      <h1>Welcome, {user?.username}!</h1>
-      <Tab.Container id="left-tabs-example" defaultActiveKey="first">
-        <Row>
-          <Col sm={3}>
-            <Nav variant="pills" className="flex-column">
-              <Nav.Item>
-                <Nav.Link eventKey="first">Account Details</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="second">My Orders</Nav.Link>
-              </Nav.Item>
-            </Nav>
-          </Col>
-          <Col sm={9}>
-            <Tab.Content>
-              <Tab.Pane eventKey="first">
-                <AccountDetails></AccountDetails>
-              </Tab.Pane>
-              <Tab.Pane eventKey="second">Second tab content</Tab.Pane>
-            </Tab.Content>
-          </Col>
-        </Row>
-      </Tab.Container>
-    </Container>
+    <>
+      <NavbarWithSearch />
+      <Container fluid className='p-4 text-center'>
+        <h1>Welcome, {user?.username}!</h1>
+        <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+          <Row>
+            <Col sm={3}>
+              <Nav variant="pills" className="flex-column">
+                <Nav.Item>
+                  <Nav.Link eventKey="first">Account Details</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="second">My Orders</Nav.Link>
+                </Nav.Item>
+              </Nav>
+            </Col>
+            <Col sm={9}>
+              <Tab.Content>
+                <Tab.Pane eventKey="first">
+                  <AccountDetails></AccountDetails>
+                </Tab.Pane>
+                <Tab.Pane eventKey="second">Second tab content</Tab.Pane>
+              </Tab.Content>
+            </Col>
+          </Row>
+        </Tab.Container>
+      </Container>
+    </>
   )
 }
 

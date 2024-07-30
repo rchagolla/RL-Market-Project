@@ -26,7 +26,7 @@ export function NavbarWithSearch() {
     <NavbarContainer>
       <Navbar>
         <Container fluid className='justify-content-left'>
-          <Navbar.Brand href="#home">
+          <Navbar.Brand href="/">
             <img
               alt=""
               src="/img/rlmarket(2).png"
@@ -35,7 +35,7 @@ export function NavbarWithSearch() {
               className="d-inline-block align-top"
             />
           </Navbar.Brand>
-          <h1>Welcome {user?.username}!</h1>
+          <h1>RL Market</h1>
           <Button className='rounded-pill' size='lg' variant='dark' onClick={() => navigate('/profile')}>
             <AiOutlineUser />
           </Button>
