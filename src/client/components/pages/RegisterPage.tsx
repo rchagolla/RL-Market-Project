@@ -32,21 +32,21 @@ function RegisterPage() {
   const handleSubmit = async (e:any) => {
     e.preventDefault();
 
-    // checks if there is symbols in username
-    if (formData.username === '' || symbols.test(formData.username)){
-      setUsernameError(true);
+    // username check
+    const isUsernameInvalid = await api.isUsernameInvalid(formData.username);
+    setUsernameError(isUsernameInvalid);
+    if (isUsernameInvalid) {
       return;
     }
 
-    setUsernameError(false);
-    const isPasswordValid = await api.isPasswordInvalid(formData.password);
-    if (isPasswordValid) {
-      setPasswordError(isPasswordValid);
+    // password check
+    const isPasswordInvalid = await api.isPasswordInvalid(formData.password);
+    setPasswordError(isPasswordInvalid);
+    if (isPasswordInvalid) {
       return;
     }
 
     // check passwords match
-    setPasswordError(false);
     if (formData.confirmPassword !== formData.password) {
       setConfirmPassError(true);
       return;

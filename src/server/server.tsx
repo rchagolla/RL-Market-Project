@@ -128,6 +128,15 @@ class APIService {
     return user;
   }
 
+  isUsernameInvalid(username: string) {
+    // checks if there is symbols in username
+    if (username === '' || symbols.test(username)){
+      return true;
+    }
+
+    return false;
+  }
+
   isPasswordInvalid(password: string) {
     // checks if password is 8-20 in length
     // setUsernameError(false);
