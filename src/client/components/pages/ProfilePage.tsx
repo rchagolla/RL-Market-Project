@@ -5,6 +5,7 @@ import { useCurrentUser } from '../hooks/useCurrentUser';
 import { useAuthentication } from '../hooks/useAuthentication';
 import AccountDetails from '../profilePage/AccountDetails';
 import { NavbarWithSearch } from '../home/NavbarWithSearch';
+import Transactions from '../profilePage/Transactions';
 
 function ProfilePage() {
   const user = useCurrentUser();
@@ -43,7 +44,9 @@ function ProfilePage() {
                 <Tab.Pane eventKey="first">
                   <AccountDetails></AccountDetails>
                 </Tab.Pane>
-                <Tab.Pane eventKey="second">Second tab content</Tab.Pane>
+                <Tab.Pane eventKey="second">
+                  <Transactions></Transactions>
+                </Tab.Pane>
               </Tab.Content>
             </Col>
           </Row>
