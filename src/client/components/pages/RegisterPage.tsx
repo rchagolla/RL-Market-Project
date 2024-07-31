@@ -32,27 +32,21 @@ function RegisterPage() {
   const handleSubmit = async (e:any) => {
     e.preventDefault();
 
-    // checks if there is symbols in username
-    if (formData.username === '' || symbols.test(formData.username)){
-      setUsernameError(true);
+    // username check
+    const isUsernameInvalid = await api.isUsernameInvalid(formData.username);
+    setUsernameError(isUsernameInvalid);
+    if (isUsernameInvalid) {
       return;
     }
 
-    // checks if password is 8-20 in length
-    setUsernameError(false);
-    if (formData.password === '' || formData.password.length < 8 || formData.password.length > 20) {
-      setPasswordError(true);
-      return;
-    }
-
-    // checks if password has a number, letter and symbol and any whitespace
-    if (!numberRegex.test(formData.password) || !letterRegex.test(formData.password) || !symbols.test(formData.password) || spaceRegex.test(formData.password)) {
-      setPasswordError(true);
+    // password check
+    const isPasswordInvalid = await api.isPasswordInvalid(formData.password);
+    setPasswordError(isPasswordInvalid);
+    if (isPasswordInvalid) {
       return;
     }
 
     // check passwords match
-    setPasswordError(false);
     if (formData.confirmPassword !== formData.password) {
       setConfirmPassError(true);
       return;
