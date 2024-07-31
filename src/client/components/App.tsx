@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import { useCurrentUser } from "./hooks/useCurrentUser";
+import ProfilePage from './pages/ProfilePage';
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,10 @@ export function App() {
     {
       path: "/register",
       element: <RegisterPage />,
+    },
+    {
+      path: "/profile",
+      element: <ProfilePage />,
     },
   ]);
 
