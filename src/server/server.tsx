@@ -13,6 +13,12 @@ const port = process.env.PORT || 3001;
 const MongoDBURI = process.env.DATABASE_URI || '';
 const saltRounds = 10;
 
+// Password/Username regex
+const symbols = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+const numberRegex = /\d/;
+const letterRegex = /[a-zA-Z]+/;
+const spaceRegex = /\s/;
+
 app.use(express.static("public"));
 app.use(express.json());
 app.use(
@@ -120,6 +126,24 @@ class APIService {
     const user = await User.findById(id);
 
     return user;
+  }
+
+  isPasswordInvalid(password: string) {
+    // checks if password is 8-20 in length
+    // setUsernameError(false);
+    if (password === '' || password.length < 8 || password.length > 20) {
+      // setPasswordError(true);
+      return true;
+    }
+
+    // checks if password has a number, letter and symbol and any whitespace
+    if (!numberRegex.test(password) || !letterRegex.test(password) || !symbols.test(password) || spaceRegex.test(password)) {
+      // setPasswordError(true);
+      return true;
+    }
+
+    // password is in right format
+    return false;
   }
 }
 
