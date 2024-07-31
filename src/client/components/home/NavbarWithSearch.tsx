@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import { Navbar, Nav, Container, Button, Row, Col } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { useAuthentication } from '../hooks/useAuthentication';
@@ -26,16 +26,24 @@ export function NavbarWithSearch() {
     <NavbarContainer>
       <Navbar>
         <Container fluid className='justify-content-left'>
-          <Navbar.Brand href="/">
-            <img
-              alt=""
-              src="/img/rlmarket(2).png"
-              width="70"
-              height="70"
-              className="d-inline-block align-top"
-            />
-          </Navbar.Brand>
-          <h1>RL Market</h1>
+          <Row className='p-2'>
+            <Col>
+              <Navbar.Brand href="/">
+                <img
+                  alt="logo"
+                  src="/img/rlmarket.png"
+                  width="70"
+                  height="70"
+                  className="d-inline-block align-top"
+                />
+              </Navbar.Brand>
+            </Col>
+            
+            <Col>
+              <h3>RL Market</h3>
+            </Col>
+
+          </Row>
           <Button className='rounded-pill' size='lg' variant='dark' onClick={() => navigate('/profile')}>
             <AiOutlineUser />
           </Button>
