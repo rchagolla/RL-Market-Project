@@ -79,9 +79,15 @@ class APIService {
   // creating user
   async createUser(username: string, password: string, bio: string, language: string) {
     // // check if username is taken
-    const findUser = await User.findOne({'username': username});
+    // const findUser = await User.findOne({'username': username});
 
-    if (findUser?.$isEmpty) {
+    // if (findUser?.$isEmpty) {
+    //   // someone is already using that username return false for hook.
+    //   return false;
+    // }
+
+    const isUsernameTaken = await this.getUserByUsername(username);
+    if (isUsernameTaken) {
       // someone is already using that username return false for hook.
       return false;
     }
@@ -117,6 +123,24 @@ class APIService {
     return true;
   }
 
+  async modifyUser(username: string, bio: string, language: string) {
+    const currUser = await this.getCurrentUser();
+    if (currUser !== null) {
+      // new username taken.
+      const isUsernameTaken = await this.getUserByUsername(username);
+      if (isUsernameTaken) {
+        return false;
+      }
+      currUser.username = username;
+      currUser.bio = bio;
+      currUser.language = language;
+
+      await currUser.save();
+      return true;
+    }
+    return false;
+  }
+
   async getCurrentUser() {
     const id = this.session.userId;
     return id ? await this.getUser(id) : null;
@@ -126,6 +150,18 @@ class APIService {
     const user = await User.findById(id);
 
     return user;
+  }
+
+  async getUserByUsername(username: string) {
+    // check if username is taken
+    const findUser = await User.findOne({'username': username});
+
+    if (findUser?.$isEmpty) {
+      // someone is already using that username.
+      return true;
+    }
+
+    return false;
   }
 
   isUsernameInvalid(username: string) {

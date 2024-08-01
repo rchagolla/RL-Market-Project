@@ -6,6 +6,7 @@ import { useAuthentication } from '../hooks/useAuthentication';
 import AccountDetails from '../profilePage/AccountDetails';
 import { NavbarWithSearch } from '../home/NavbarWithSearch';
 import Transactions from '../profilePage/Transactions';
+import styled from 'styled-components';
 
 function ProfilePage() {
   const user = useCurrentUser();
@@ -37,6 +38,11 @@ function ProfilePage() {
                 <Nav.Item>
                   <Nav.Link eventKey="second">My Orders</Nav.Link>
                 </Nav.Item>
+                <LogoutButton>
+                  <Nav.Item>
+                    <Nav.Link onClick={logout}>Logout</Nav.Link>
+                  </Nav.Item>
+                </LogoutButton>
               </Nav>
             </Col>
             <Col sm={9}>
@@ -55,5 +61,10 @@ function ProfilePage() {
     </>
   )
 }
+
+const LogoutButton = styled('div')`
+  --bs-nav-link-color: #dc3545;
+  --bs-nav-link-hover-color: red;
+`;
 
 export default ProfilePage
