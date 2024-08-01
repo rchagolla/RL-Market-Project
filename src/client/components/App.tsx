@@ -28,7 +28,7 @@ export function App() {
     },
     {
       path: "/profile",
-      element: <ProfilePage />,
+      element: <RequireAuth Component={ProfilePage} />,
     },
   ]);
 
