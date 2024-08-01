@@ -1,31 +1,44 @@
 import React, { useState } from 'react'
 import { Card, Form, Row, Col, Button, FormSelect, FloatingLabel } from 'react-bootstrap'
 import styled from 'styled-components';
-import { User } from '../../../server/models/User';
 import { useCurrentUser } from '../hooks/useCurrentUser';
+import { api } from '../../api';
 
 function AccountDetails() {
   const user = useCurrentUser();
   const [usernameErr, setUsernameErr] = useState(false);
   const [bioErr, setBioErr] = useState(false);
-  const [formData, setFormData] = useState({
-    username: '',
-    bio: '',
-    language: ''
-  });
-
-  const setField = (field:string, value:string) => {
-    setFormData({
-      ...formData,
-      [field]: value
-    });
-  };
+  // MAY NEED TO CHANGE
+  const [preferredLanguage, setPreferredLanguage] = useState('en');
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
+    const username = e.target[0].value;
+    const bio = e.target[1].value;
+    const language = e.target[2].value
+    
+    // check username format
+    const isUsernameInvalid = await api.isUsernameInvalid(username);
+    setUsernameErr(isUsernameInvalid);
+    if (usernameErr) {
+      return;
+    }
 
-    setUsernameErr(true);
-    setBioErr(true);
+    // check bio
+    if (bio === '') {
+      setBioErr(true);
+      return;
+    }
+
+    setBioErr(false);
+    // save changes/check if username taken.
+    const success = await api.modifyUser(username, bio, language);
+    if (success) {
+      console.log('user details modified!');
+      return;
+    }
+
+    console.log('username is taken');
   };
 
   return (
@@ -45,11 +58,11 @@ function AccountDetails() {
                   type='text'
                   name="username"
                   defaultValue={user?.username}
-                  onChange={e => setField('username', e.target.value)}
                   isInvalid={usernameErr}
                 />
                 <Form.Control.Feedback type="invalid">
-                  Username is invalid.
+                  Username is invalid. (alphanumeric
+                  characters only).
                 </Form.Control.Feedback>
               </Col>
             </Form.Group>
@@ -64,7 +77,6 @@ function AccountDetails() {
                   as='textarea'
                   name="bio"
                   defaultValue={user?.bio}
-                  onChange={e => setField('bio', e.target.value)}
                   isInvalid={bioErr}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -77,7 +89,7 @@ function AccountDetails() {
             <Form.Group className='mb-3'>
               <SelectGroup>
                 <FloatingLabel controlId="floatingSelect" label="Preferred language"> 
-                  <FormSelect name='language' onChange={e => setField('language', e.target.value)}>
+                  <FormSelect name='language' onChange={e => setPreferredLanguage(e.target.value)}>
                     <option value='en'> English </option>
                     <option value='es'> Spanish </option>
                     <option value='fr'> French </option>
