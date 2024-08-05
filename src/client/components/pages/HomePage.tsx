@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { useCurrentUser } from '../hooks/useCurrentUser';
-import { products } from '@rocketleagueapi/items';
-import { Card, Row, Container, Pagination } from 'react-bootstrap';
+import { products, qualities, slots } from '@rocketleagueapi/items';
+import { Card, Row, Container, Pagination, Modal, Button } from 'react-bootstrap';
 import { NavbarWithSearch } from '../home/NavbarWithSearch';
 
 // 6314 items from products
@@ -32,13 +32,27 @@ function HomePage() {
   const itemsPerPage = 49;
   const prods: ProductCollection = products as ProductCollection;
   const productsArr = Object.entries(prods);
-  const [slicedProducts, setSlicedProducts] = useState(productsArr.slice(0, 49));
+  const [slicedProducts, setSlicedProducts] = useState(productsArr.slice(0, itemsPerPage));
 
   // used for pagination format
   const [pagesArr, setPagesArr] = useState(Array.from({length: 10}, (_, i) => i + 1));
   const [isFirstDisabled, setIsFirstDisabled] = useState(true);
   const [isLastDisabled, setIsLastDisabled] = useState(false);
   const [currPage, setCurrPage] = useState(1);
+
+  // modal states
+  const [show, setShow] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(productsArr[0]);
+
+  const handleShow = (itemId: string) => {
+    const id = parseInt(itemId);
+    const item = productsArr.filter(([key, value]) => key === itemId);
+    console.log(item[0][1]);
+    setSelectedItem(item[0]);
+    setShow(true);
+  }
+
+  const handleClose = () => setShow(false);
 
   // change items on page
   function changePage(page:number) {
@@ -118,12 +132,12 @@ function HomePage() {
         </Pagination>
 
         <Row className='justify-content-center mb-3'>
-          page {currPage} of 129
+          page {currPage} of {totalPages}
         </Row>
 
         <Row className='justify-content-center mb-3'>
           {slicedProducts.map(([key, value]) => (
-            <Card className='m-2' style={{ width: '13%' }} key={key}>
+            <Card className='m-2' style={{ width: '13%' }} key={key} onClick={() => handleShow(key)}>
               <Card.Img variant="top" src="img/comingSoon.jpeg" />
               <Card.Body>
                 <Card.Title>{value.name}</Card.Title>
@@ -132,8 +146,41 @@ function HomePage() {
           ))}
         </Row>
 
+        <Modal 
+          show={show}
+          onHide={handleClose}
+          className='justify-content-center text-center'
+          centered
+          size='lg'
+        > 
+          <Modal.Header closeButton>
+            <Modal.Title>{selectedItem[1].name}</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <img
+              src='img/comingSoon.jpeg'
+              width='50%'
+            />
+            <br />
+            <br />
+
+            <Button className='m-2' variant='outline-secondary' size='sm'> {qualities[selectedItem[1].quality]} </Button>
+            <Button variant='outline-secondary' size='sm'> {slots[selectedItem[1].slot]} </Button>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button variant="success" size='lg' onClick={handleClose}>
+              Buy
+            </Button>
+            <Button variant="danger" size='lg' onClick={handleClose}>
+              Sell
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         <Row className='justify-content-center mb-3'>
-          page {currPage} of 129
+          page {currPage} of {totalPages}
         </Row>
 
         <Pagination className='justify-content-center'>
