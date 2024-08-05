@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { useCurrentUser } from '../hooks/useCurrentUser';
-import { products,qualities } from '@rocketleagueapi/items';
+import { products, qualities, slots } from '@rocketleagueapi/items';
 import { Card, Row, Container, Pagination, Modal, Button } from 'react-bootstrap';
 import { NavbarWithSearch } from '../home/NavbarWithSearch';
 
@@ -32,7 +32,7 @@ function HomePage() {
   const itemsPerPage = 49;
   const prods: ProductCollection = products as ProductCollection;
   const productsArr = Object.entries(prods);
-  const [slicedProducts, setSlicedProducts] = useState(productsArr.slice(0, 49));
+  const [slicedProducts, setSlicedProducts] = useState(productsArr.slice(0, itemsPerPage));
 
   // used for pagination format
   const [pagesArr, setPagesArr] = useState(Array.from({length: 10}, (_, i) => i + 1));
@@ -146,19 +146,35 @@ function HomePage() {
           ))}
         </Row>
 
-        <Modal show={show} onHide={handleClose}>
+        <Modal 
+          show={show}
+          onHide={handleClose}
+          className='justify-content-center text-center'
+          centered
+          size='lg'
+        > 
           <Modal.Header closeButton>
             <Modal.Title>{selectedItem[1].name}</Modal.Title>
           </Modal.Header>
 
-          <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+          <Modal.Body>
+            <img
+              src='img/comingSoon.jpeg'
+              width='50%'
+            />
+            <br />
+            <br />
+
+            <Button className='m-2' variant='outline-secondary' size='sm'> {qualities[selectedItem[1].quality]} </Button>
+            <Button variant='outline-secondary' size='sm'> {slots[selectedItem[1].slot]} </Button>
+          </Modal.Body>
 
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
+            <Button variant="success" size='lg' onClick={handleClose}>
+              Buy
             </Button>
-            <Button variant="primary" onClick={handleClose}>
-              Save Changes
+            <Button variant="danger" size='lg' onClick={handleClose}>
+              Sell
             </Button>
           </Modal.Footer>
         </Modal>
