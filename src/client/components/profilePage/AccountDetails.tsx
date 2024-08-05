@@ -46,6 +46,14 @@ function AccountDetails() {
       <Card.Header>Account Details</Card.Header>
 
       <Card.Body className='mh-100'>
+        <img
+          alt="logo"
+          src="/img/userIcon.png"
+          width="70"
+          height="70"
+          className="rounded-circle mb-4"
+        />
+
         <FormContent>
           <Form onSubmit={handleSubmit}>
             {/* Username Input */}

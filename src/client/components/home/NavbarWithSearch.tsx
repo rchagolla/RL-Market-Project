@@ -9,17 +9,6 @@ import { AiOutlineUser } from 'react-icons/ai';
 export function NavbarWithSearch() {
   const user = useCurrentUser();
   const navigate = useNavigate();
-  const { logoutUser } = useAuthentication();
-
-  // async function logout() {
-  //   const success = await logoutUser();
-  //   if (success) {
-  //     navigate('/');
-  //   } else {
-  //     // TODO: change to alert
-  //     console.log('error logging out!');
-  //   }
-  // };
   
   return (
     // TODO: Finish navbar
