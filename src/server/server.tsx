@@ -3,7 +3,7 @@ import React from "react";
 import ReactDOMServer from "react-dom/server";
 import 'dotenv/config';
 import bcrypt from 'bcrypt';
-import { connect } from 'mongoose';
+import { connect, ObjectId } from 'mongoose';
 import { User } from "./models/User";
 import session, { SessionData} from 'express-session';
 import { rpcHandler } from 'typed-rpc/express';
@@ -190,6 +190,13 @@ class APIService {
 
     // password is in right format
     return false;
+  }
+
+  sellItem(itemId: string) {
+    console.log(`userId: `, this.session.userId);
+    console.log("itemId: ", itemId);
+
+    return true;
   }
 }
 
