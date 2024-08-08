@@ -54,8 +54,11 @@ function HomePage() {
 
   async function handleSell(itemId: string) {
     const success = await api.sellItem(itemId);
-
-    handleClose();
+    if (success) {
+      setItemSold(true);
+      handleClose();
+      return;
+    }
   }
 
   const handleClose = () => setShow(false);

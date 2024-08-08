@@ -201,7 +201,6 @@ class APIService {
 }
 
 // starting up DB
-// TODO: MAKE DB CONNECT THEN START SERVER
 async function start() {
   try{
     await connect(MongoDBURI);
