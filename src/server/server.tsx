@@ -192,10 +192,27 @@ class APIService {
     return false;
   }
 
-  sellItem(itemId: string) {
-    console.log(`userId: `, this.session.userId);
-    console.log("itemId: ", itemId);
+  async sellItem(itemId: string) {
+    const userId = this.session.userId;
 
+    // check if user is selling same item
+    const findItemByUser = await Inventory.findOne({'userId': userId, 'itemId': itemId});
+
+    if (findItemByUser?.$isEmpty) {
+      findItemByUser.qty = findItemByUser.qty + 1;
+
+      await findItemByUser.save();
+      return true;
+    }
+
+    // user is not currently selling item
+    const newItem = new Inventory({
+      userId: userId,
+      itemId: itemId,
+      qty: 1
+    });
+
+    await newItem.save();
     return true;
   }
 }
