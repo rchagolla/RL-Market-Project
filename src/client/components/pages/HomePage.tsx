@@ -28,6 +28,7 @@ interface ProductCollection {
 function HomePage() {
   const user = useCurrentUser();
   const [itemSold, setItemSold] = useState(false);
+  const [itemBought, setItemBought] = useState(false);
 
   // used for item format
   const totalPages = 129;
@@ -57,8 +58,21 @@ function HomePage() {
     if (success) {
       setItemSold(true);
       handleClose();
+
       return;
     }
+  }
+
+  async function handleBuy(itemId: string) {
+    const success = await api.buyItem(itemId);
+    if (success) {
+      setItemBought(true);
+      handleClose();
+
+      return;
+    }
+
+    // TODO: handle item isn't in inventory
   }
 
   const handleClose = () => setShow(false);
@@ -180,7 +194,7 @@ function HomePage() {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button variant="success" size='lg' onClick={handleClose}>
+            <Button variant="success" size='lg' onClick={() => handleBuy(selectedItem[0])}>
               Buy
             </Button>
             <Button variant="danger" size='lg' onClick={() => handleSell(selectedItem[0])}>
