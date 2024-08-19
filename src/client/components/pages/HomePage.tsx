@@ -3,6 +3,7 @@ import { useCurrentUser } from '../hooks/useCurrentUser';
 import { products, qualities, slots } from '@rocketleagueapi/items';
 import { Card, Row, Container, Pagination, Modal, Button } from 'react-bootstrap';
 import { NavbarWithSearch } from '../home/NavbarWithSearch';
+import { api } from '../../api';
 
 // 6314 items from products
 // 49 items per page
@@ -26,6 +27,8 @@ interface ProductCollection {
 
 function HomePage() {
   const user = useCurrentUser();
+  const [itemSold, setItemSold] = useState(false);
+  const [itemBought, setItemBought] = useState(false);
 
   // used for item format
   const totalPages = 129;
@@ -44,12 +47,32 @@ function HomePage() {
   const [show, setShow] = useState(false);
   const [selectedItem, setSelectedItem] = useState(productsArr[0]);
 
-  const handleShow = (itemId: string) => {
-    const id = parseInt(itemId);
+  function handleShow(itemId: string) {
     const item = productsArr.filter(([key, value]) => key === itemId);
-    console.log(item[0][1]);
     setSelectedItem(item[0]);
     setShow(true);
+  }
+
+  async function handleSell(itemId: string) {
+    const success = await api.sellItem(itemId);
+    if (success) {
+      setItemSold(true);
+      handleClose();
+
+      return;
+    }
+  }
+
+  async function handleBuy(itemId: string) {
+    const success = await api.buyItem(itemId);
+    if (success) {
+      setItemBought(true);
+      handleClose();
+
+      return;
+    }
+
+    // TODO: handle item isn't in inventory
   }
 
   const handleClose = () => setShow(false);
@@ -146,6 +169,7 @@ function HomePage() {
           ))}
         </Row>
 
+        {/* TODO: Refactor modal to it's own component */}
         <Modal 
           show={show}
           onHide={handleClose}
@@ -170,10 +194,10 @@ function HomePage() {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button variant="success" size='lg' onClick={handleClose}>
+            <Button variant="success" size='lg' onClick={() => handleBuy(selectedItem[0])}>
               Buy
             </Button>
-            <Button variant="danger" size='lg' onClick={handleClose}>
+            <Button variant="danger" size='lg' onClick={() => handleSell(selectedItem[0])}>
               Sell
             </Button>
           </Modal.Footer>

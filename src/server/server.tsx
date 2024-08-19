@@ -3,10 +3,11 @@ import React from "react";
 import ReactDOMServer from "react-dom/server";
 import 'dotenv/config';
 import bcrypt from 'bcrypt';
-import { connect } from 'mongoose';
+import { connect, ObjectId } from 'mongoose';
 import { User } from "./models/User";
 import session, { SessionData} from 'express-session';
 import { rpcHandler } from 'typed-rpc/express';
+import { Inventory } from "./models/Inventory";
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -78,14 +79,7 @@ class APIService {
 
   // creating user
   async createUser(username: string, password: string, bio: string, language: string) {
-    // // check if username is taken
-    // const findUser = await User.findOne({'username': username});
-
-    // if (findUser?.$isEmpty) {
-    //   // someone is already using that username return false for hook.
-    //   return false;
-    // }
-
+    // check if username is taken
     const isUsernameTaken = await this.getUserByUsername(username);
     if (isUsernameTaken) {
       // someone is already using that username return false for hook.
@@ -116,7 +110,6 @@ class APIService {
 
         // creating account and returning true for hook.
         await newUser.save();
-        console.log('user created!');
       });
     });
 
@@ -190,10 +183,62 @@ class APIService {
     // password is in right format
     return false;
   }
+
+  async sellItem(itemId: string) {
+    const userId = this.session.userId;
+
+    // check if user is selling same item
+    const findItemByUser = await Inventory.findOne({'userId': userId, 'itemId': itemId});
+
+    if (findItemByUser?.$isEmpty) {
+      findItemByUser.qty = findItemByUser.qty + 1;
+
+      await findItemByUser.save();
+      return true;
+    }
+
+    // user is not currently selling item
+    const newItem = new Inventory({
+      userId: userId,
+      itemId: itemId,
+      qty: 1
+    });
+
+    await newItem.save();
+    return true;
+  }
+
+  async buyItem(itemId: string) {
+    // search if item is being sold
+    const item = await Inventory.findOne({'itemId': itemId});
+
+    // prevent user from buying from itself
+    const itemUserId = item?.userId || '';
+    const currUserId = this.session.userId || '';
+    if (itemUserId === currUserId) {
+      return false;
+    }
+
+    // item is in inventory
+    if (item?.$isEmpty) {
+      const newQty = item.qty - 1;
+      
+      // remove from inventory
+      if (newQty == 0) {
+        await Inventory.findByIdAndDelete(item.id);
+        return true;
+      }
+
+      item.qty = newQty;
+      await item.save();
+      return true;
+    }
+
+    return false;
+  }
 }
 
 // starting up DB
-// TODO: MAKE DB CONNECT THEN START SERVER
 async function start() {
   try{
     await connect(MongoDBURI);
