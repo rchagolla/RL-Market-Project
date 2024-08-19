@@ -30,7 +30,6 @@ coverage
 public/js/client.js
 
 # json packages
-package.json
 package-lock.json
 
 # nyc test coverage
