@@ -33,9 +33,6 @@ public/js/client.js
 package.json
 package-lock.json
 
-# webpack config
-webpack.config.js
-
 # nyc test coverage
 .nyc_output
 
