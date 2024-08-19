@@ -71,6 +71,8 @@ function HomePage() {
 
       return;
     }
+
+    // TODO: handle item isn't in inventory
   }
 
   const handleClose = () => setShow(false);

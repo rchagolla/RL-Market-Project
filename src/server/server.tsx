@@ -8,6 +8,7 @@ import { User } from "./models/User";
 import session, { SessionData} from 'express-session';
 import { rpcHandler } from 'typed-rpc/express';
 import { Inventory } from "./models/Inventory";
+import { it } from "node:test";
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -217,10 +218,34 @@ class APIService {
   }
 
   async buyItem(itemId: string) {
-    console.log(this.session.userId);
-    console.log(itemId);
+    // search if item is being sold
+    const item = await Inventory.findOne({'itemId': itemId});
 
-    return true;
+    // prevent user from buying from itself
+    const itemUserId = item?.userId || '';
+    const currUserId = this.session.userId || '';
+    if (itemUserId === currUserId) {
+      return false;
+    }
+
+    // item is in inventory
+    if (item?.$isEmpty) {
+      const newQty = item.qty - 1;
+      console.log(newQty);
+      
+      // remove from inventory
+      if (newQty == 0) {
+        console.log(item.id);
+        await Inventory.findByIdAndDelete(item.id);
+        return true;
+      }
+
+      item.qty = newQty;
+      await item.save();
+      return true;
+    }
+
+    return false;
   }
 }
 
