@@ -8,8 +8,6 @@ import { User } from "./models/User";
 import session, { SessionData} from 'express-session';
 import { rpcHandler } from 'typed-rpc/express';
 import { Inventory } from "./models/Inventory";
-import { Inventory } from "./models/Inventory";
-import { it } from "node:test";
 
 const app = express();
 const port = process.env.PORT || 3001;
