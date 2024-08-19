@@ -79,14 +79,7 @@ class APIService {
 
   // creating user
   async createUser(username: string, password: string, bio: string, language: string) {
-    // // check if username is taken
-    // const findUser = await User.findOne({'username': username});
-
-    // if (findUser?.$isEmpty) {
-    //   // someone is already using that username return false for hook.
-    //   return false;
-    // }
-
+    // check if username is taken
     const isUsernameTaken = await this.getUserByUsername(username);
     if (isUsernameTaken) {
       // someone is already using that username return false for hook.
@@ -117,7 +110,6 @@ class APIService {
 
         // creating account and returning true for hook.
         await newUser.save();
-        console.log('user created!');
       });
     });
 
@@ -230,11 +222,9 @@ class APIService {
     // item is in inventory
     if (item?.$isEmpty) {
       const newQty = item.qty - 1;
-      console.log(newQty);
       
       // remove from inventory
       if (newQty == 0) {
-        console.log(item.id);
         await Inventory.findByIdAndDelete(item.id);
         return true;
       }
