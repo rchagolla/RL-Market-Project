@@ -215,6 +215,13 @@ class APIService {
     await newItem.save();
     return true;
   }
+
+  async buyItem(itemId: string) {
+    console.log(this.session.userId);
+    console.log(itemId);
+
+    return true;
+  }
 }
 
 // starting up DB
