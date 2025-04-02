@@ -251,6 +251,7 @@ async function start() {
 
 app.listen(port, () => {
   console.log(`Server listening at port ${port}`);
+  console.log(`Check website at http://localhost:${port}/`)
 });
 
 
