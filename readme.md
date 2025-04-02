@@ -4,7 +4,9 @@ This is my implementation of a Rocket League marketplace. You can browse and buy
 
 ## Installation
 
-Use the package manager [npm](https://www.npmjs.com/) to install necessary dependencies.
+Clone the Repository to the desired location.
+
+Traverse to the repo and use the package manager [npm](https://www.npmjs.com/) to install necessary dependencies.
 
 ```bash
 npm i
