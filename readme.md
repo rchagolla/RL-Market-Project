@@ -45,3 +45,4 @@ To view the project, go to [http://localhost:8080/](http://localhost:8080/)
 + Proper images for all items.
 + prepopulated users and items.
 + Enhance the buying and selling interaction.
++ test cases for key features.
